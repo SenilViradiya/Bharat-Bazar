@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -7,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useOrder } from "@/context/OrderContext";
 
-export default function ThankYouPage() {
+function ThankYouPageContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const { latestOrder, getOrderById } = useOrder();
@@ -81,5 +82,25 @@ export default function ThankYouPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function ThankYouPage() {
+  return (
+    <Suspense
+      fallback={
+        <>
+          <Navbar />
+          <main className="max-w-6xl mx-auto px-6 py-12 min-h-[60vh]">
+            <section className="bg-surface-container-lowest border border-surface-container-high p-8 text-center">
+              <p className="text-on-surface-variant">Loading your order details...</p>
+            </section>
+          </main>
+          <Footer />
+        </>
+      }
+    >
+      <ThankYouPageContent />
+    </Suspense>
   );
 }
